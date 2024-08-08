@@ -23,21 +23,25 @@ class Settings(BaseSettings):
 
     SECRET_KEY: str = secrets.token_urlsafe(32)
     ALGORITHM: str = 'HS256'
-    DOMAIN: str = 'https://fastapi-dyjd.onrender.com'
+    DOMAIN: str = 'localhost'
     BACKEND_CORS_ORIGINS: Annotated[
         list[AnyUrl] | str, BeforeValidator(parse_cors)
     ] = []
 
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 8
 
-    POSTGRES_SERVER: str = 'dpg-cqq2dgqj1k6c73d9qjq0-a'
+    DATABASE_TYPE: str = 'sqlite'
+
+    POSTGRES_SERVER: str = 'localhost'
     POSTGRES_PORT: int = 5432
-    POSTGRES_USER: str = 'test'
-    POSTGRES_PASSWORD: str = '2RMatcepeyaldJqhijMV2jXM0Wm6mnhn'
-    POSTGRES_DB: str = 'test_nwvk'
+    POSTGRES_USER: str = 'postgres'
+    POSTGRES_PASSWORD: str = 'postgres'
+    POSTGRES_DB: str = 'test'
 
     @property
     def database_uri(self) -> PostgresDsn:
+        if self.DATABASE_TYPE == 'sqlite':
+            return 'sqlite:///./test.db'
         return MultiHostUrl.build(
             scheme='postgresql+psycopg',
             username=self.POSTGRES_USER,
