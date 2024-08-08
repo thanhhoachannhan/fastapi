@@ -1,0 +1,30 @@
+[tool.poetry]
+name = "temp"
+version = "0.1.0"
+description = ""
+authors = ["Thanh"]
+packages = [{ include = "app" }]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = "^0.112.0"
+uvicorn = "0.20.0"
+sqlalchemy = "^2.0.32"
+pydantic = {extras = ["email"], version = "^2.8.2"}
+pydantic-settings = "^2.4.0"
+alembic = "^1.13.2"
+psycopg = {extras = ["binary"], version = "^3.2.1"}
+pyjwt = "^2.9.0"
+passlib = {extras = ["bcrypt"], version = "^1.7.4"}
+python-multipart = "^0.0.9"
+
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.2"
+psycopg2 = "^2.9.9"
+requests = "^2.32.3"
+pyclean = "^3.0.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
