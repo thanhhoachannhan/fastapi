@@ -1,12 +1,15 @@
 
+init_migrations:
+    alembic init migrations
 
-alembic init migrations
+revision:
+    alembic revision --autogenerate -m "initdb"
 
-alembic revision --autogenerate -m "initdb"
+upgrade:
+    alembic upgrade head
 
-alembic upgrade head
-
-uvicorn app.main:app --reload
+run:
+    uvicorn app.main:app --reload
 
 clean_cache:
     pyclean --verbose .

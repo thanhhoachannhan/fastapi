@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 from app import security
 from app.config import settings
 from app.database.db import get_db
-from app.crud.user import user_crud
+from app.repository.user import user_repository
 from app.schemas.auth import Token, UserRegister
 from app.schemas.user import UserInDB
 
@@ -20,7 +20,7 @@ def login_for_access_token(
     db: Annotated[Session, Depends(get_db)],
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()]
 ) -> Dict[str, Any]:
-    user = user_crud.authenticate_user(
+    user = user_repository.authenticate_user(
         db,
         email=form_data.username,
         password=form_data.password
@@ -30,7 +30,7 @@ def login_for_access_token(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail='Incorrect email or password',
         )
-    if not user_crud.is_active_user(user):
+    if not user_repository.is_active_user(user):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail='Inactive user'
         )
@@ -44,7 +44,7 @@ def login_for_access_token(
 
 @router.post('/register', response_model=dict, status_code=status.HTTP_201_CREATED)
 def register(user_register: UserRegister, db: Annotated[Session, Depends(get_db)]):
-    user = user_crud.get_user_by_email(db, email=user_register.email)
+    user = user_repository.get_user_by_email(db, email=user_register.email)
     if user:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
@@ -56,5 +56,5 @@ def register(user_register: UserRegister, db: Annotated[Session, Depends(get_db)
         hashed_password=security.get_password_hash(user_register.password),
     )
 
-    user_crud.create(db, user_in)
+    user_repository.create(db, user_in)
     return {'message': 'User created successfully'}
